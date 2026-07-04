@@ -1,6 +1,6 @@
 // prisma.config.ts
-import { defineConfig } from "prisma/config";
-import path from "node:path";
+import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -8,7 +8,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    // SQLite local en archivo dev.db en la raíz del proyecto
-    url: `file:${path.join(process.cwd(), "dev.db")}`,
+    url: env("DATABASE_URL"),
   },
 });

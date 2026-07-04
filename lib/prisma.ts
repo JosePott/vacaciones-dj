@@ -1,9 +1,16 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const connectionString = process.env.DATABASE_URL ?? "file:./dev.db";
-const adapter = new PrismaBetterSqlite3({ url: connectionString });
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required.");
+}
+
+const adapter = new PrismaPg({
+  connectionString,
+});
 
 // Evita múltiples instancias en dev (hot reload)
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
