@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  HR
+  EMPLOYEE
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELED
+}
+
+enum RequestType {
+  VACATION
+  DAY_OFF
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(EMPLOYEE)
+
+  employee     Employee?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Employee {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName      String
+  area          String
+  position      String?
+  personalEmail String?
+  isActive      Boolean  @default(true)
+
+  vacationSaldo Int      @default(15)
+
+  requests      LeaveRequest[]
+  shiftAssignments WorkShiftAssignment[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model LeaveRequest {
+  id           String        @id @default(cuid())
+  employeeId   String
+  employee     Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  startDate    String
+  endDate      String
+  type         RequestType   @default(VACATION)
+  comment      String?
+  status       RequestStatus @default(PENDING)
+
+  decisionBy   String?
+  decisionAt   DateTime?
+  decisionNote String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([employeeId])
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+model ShiftTemplate {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  startTime    String
+  endTime      String
+  breakMinutes Int      @default(60)
+  isActive     Boolean  @default(true)
+
+  assignments  WorkShiftAssignment[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model WorkShiftAssignment {
+  id              String        @id @default(cuid())
+  employeeId      String
+  employee        Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  shiftTemplateId String
+  shiftTemplate   ShiftTemplate @relation(fields: [shiftTemplateId], references: [id], onDelete: Restrict)
+  date            String
+  note            String?
+  createdBy       String?
+  updatedBy       String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([employeeId, date])
+  @@index([date])
+  @@index([shiftTemplateId])
+}
