@@ -1,6 +1,26 @@
-# Vacaciones DJ
+# Vacaciones DJ — gestión de vacaciones y turnos
 
-App de gestion de vacaciones, dias libres y turnos construida con Next.js, Prisma y PostgreSQL.
+Aplicación web para centralizar la gestión de vacaciones, días libres y turnos de un equipo, construida con Next.js, TypeScript, Prisma y PostgreSQL.
+
+[Acceder a la aplicación](https://vacaciones-dj.vercel.app)
+
+## Qué encontrarás
+
+- Vistas para empleados, solicitudes, calendario y planificación de turnos.
+- Acceso con sesión y flujos para empleados y recursos humanos.
+- Notificaciones por correo configurables con Gmail SMTP o Resend.
+- Persistencia con PostgreSQL y migraciones mediante Prisma.
+
+## Recorrido del proyecto
+
+El código se organiza alrededor de la consulta y gestión de solicitudes y turnos. Las páginas están en `app/`, las acciones del servidor en `app/actions/` y las utilidades compartidas en `lib/`.
+
+Para explorar el proyecto con tu propia configuración, sigue la instalación local y crea el primer usuario HR con el seed descrito abajo. El acceso al despliegue puede requerir una cuenta.
+
+## Tecnologías
+
+Next.js · React · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Vitest
+
 
 ## Requisitos
 
